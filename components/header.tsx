@@ -76,9 +76,11 @@ export function Header() {
           </div>
 
           {/* Login */}
-          <Button variant="ghost" size="sm" className="hidden sm:flex gap-2">
-            <User className="h-4 w-4" />
-            <span>Login</span>
+          <Button asChild variant="ghost" size="sm" className="hidden sm:flex gap-2">
+            <Link href="/login" className="inline-flex items-center gap-2">
+              <User className="h-4 w-4" />
+              <span>Login</span>
+            </Link>
           </Button>
 
           {/* Mobile menu button */}
@@ -125,9 +127,11 @@ export function Header() {
           ))}
 
           <div className="pt-4 border-t border-border">
-            <Button variant="outline" className="w-full justify-center gap-2">
-              <User className="h-4 w-4" />
-              <span>Login / Sign up</span>
+            <Button asChild variant="outline" className="w-full justify-center gap-2">
+              <Link href="/login" className="inline-flex items-center justify-center gap-2 w-full">
+                <User className="h-4 w-4" />
+                <span>Login / Sign up</span>
+              </Link>
             </Button>
           </div>
         </div>
