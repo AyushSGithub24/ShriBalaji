@@ -35,7 +35,7 @@ export function Header() {
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
          
-          <span className="font-serif text-4xl font-normal tracking-tight">
+          <span className="font-serif text-4xl font-normal tracking-tight bg-[#faf8f5] rounded">
             <span className="text-[#362F8F]">S</span><span className="text-red-500">B</span><span className="text-[#362F8F]">A</span>
           </span>
         </Link>
