@@ -50,19 +50,19 @@ export function Footer() {
               <div className="flex items-center gap-3 text-sm">
                 <Phone className="h-5 w-5 text-primary shrink-0" />
                 <a
-                  href="tel:+919311055189"
+                  href="tel:+919818697349"
                   className="text-accent hover:underline"
                 >
-                  +91 93110 55189
+                  +91 9818697349
                 </a>
               </div>
               <div className="flex items-center gap-3 text-sm">
                 <Mail className="h-5 w-5 text-primary shrink-0" />
                 <a
-                  href="mailto:shri_bljadv@yahoo.com"
+                  href="mailto:shribalji136@gmail.comm"
                   className="text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  shri_bljadv@yahoo.com
+                  shribalaji136@gmail.com
                 </a>
               </div>
             </div>

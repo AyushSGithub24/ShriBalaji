@@ -75,7 +75,7 @@ export default function SignupPage() {
                       <label className="block text-sm font-medium text-foreground">Phone number</label>
                       <Input
                         type="tel"
-                        placeholder="+91 93110 55189"
+                        placeholder="+91 9999999999"
                         required
                         className="bg-secondary/70 border-border"
                       />

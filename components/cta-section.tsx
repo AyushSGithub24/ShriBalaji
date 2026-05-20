@@ -4,7 +4,7 @@ import { ArrowRight, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
-const CONTACT_NUMBER = "+91 93110 55189";
+const CONTACT_NUMBER = "+91 9818697349";
 
 export function CTASection() {
   return (

@@ -54,7 +54,7 @@ export function CategoryGrid() {
                     backgroundImage: `url(${categoryImages[category.slug]})`,
                   }}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-foreground/90 via-foreground/40 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
               </div>
 
               {/* Content */}
@@ -63,7 +63,7 @@ export function CategoryGrid() {
                   <div>
                     <h3
                       className={cn(
-                        "font-serif text-card mb-2",
+                        "font-serif text-card-foreground mb-2",
                         index === 0
                           ? "text-2xl md:text-3xl lg:text-4xl"
                           : "text-xl md:text-2xl"
@@ -71,27 +71,27 @@ export function CategoryGrid() {
                     >
                       {category.name}
                     </h3>
-                    <p className="text-card/80 text-sm line-clamp-2">
+                    <p className="text-card-foreground/80 text-sm line-clamp-2">
                       {category.description}
                     </p>
                     <div className="flex flex-wrap gap-2 mt-4">
                       {category.products.slice(0, 3).map((product) => (
                         <span
                           key={product.id}
-                          className="text-xs px-2 py-1 rounded-full bg-card/10 text-card/90 backdrop-blur-sm"
+                          className="text-xs px-2 py-1 rounded-full bg-card/10 text-card-foreground/90 backdrop-blur-sm"
                         >
                           {product.name}
                         </span>
                       ))}
                       {category.products.length > 3 && (
-                        <span className="text-xs px-2 py-1 rounded-full bg-card/10 text-card/90 backdrop-blur-sm">
+                        <span className="text-xs px-2 py-1 rounded-full bg-card/10 text-card-foreground/90 backdrop-blur-sm">
                           +{category.products.length - 3} more
                         </span>
                       )}
                     </div>
                   </div>
                   <div className="flex-shrink-0 w-10 h-10 rounded-full bg-card/20 backdrop-blur-sm flex items-center justify-center transition-all group-hover:bg-card group-hover:text-foreground">
-                    <ArrowUpRight className="h-5 w-5 text-card group-hover:text-foreground transition-colors" />
+                    <ArrowUpRight className="h-5 w-5 text-card-foreground group-hover:text-foreground transition-colors" />
                   </div>
                 </div>
               </div>

@@ -23,7 +23,7 @@ interface ProductConfiguratorProps {
   images: string[];
 }
 
-const CONTACT_NUMBER = "+91 98765 43210";
+const CONTACT_NUMBER = "+91 9818697349";
 
 export function ProductConfigurator({
   product,
@@ -132,7 +132,7 @@ export function ProductConfigurator({
                     className={cn(
                       "px-4 py-2 rounded-lg text-sm font-medium transition-all border",
                       selections[filter.label] === option
-                        ? "bg-primary text-primary-foreground border-primary"
+                        ? "bg-accent text-accent-foreground border-accent"
                         : "bg-card border-border hover:border-accent/50 text-foreground"
                     )}
                   >

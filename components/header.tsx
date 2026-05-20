@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
-import { Search, Menu, X, User } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Search, Menu, X, User, Moon, Sun } from "lucide-react";
+import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -18,6 +19,15 @@ const navigation = [
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const { theme, setTheme } = useTheme();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const effectiveTheme = mounted && theme !== "system" ? theme : "light";
+  const isDark = effectiveTheme === "dark";
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
@@ -74,6 +84,21 @@ export function Header() {
               </button>
             </div>
           </div>
+
+          {/* Theme toggle */}
+          <Button
+            variant="ghost"
+            size="sm"
+            className="hidden sm:inline-flex p-2 rounded-full hover:bg-secondary transition-colors"
+            onClick={() => setTheme(isDark ? "light" : "dark")}
+            aria-label="Toggle color mode"
+          >
+            {isDark ? (
+              <Sun className="h-4 w-4" />
+            ) : (
+              <Moon className="h-4 w-4" />
+            )}
+          </Button>
 
           {/* Login */}
           <Button asChild variant="ghost" size="sm" className="hidden sm:flex gap-2">
