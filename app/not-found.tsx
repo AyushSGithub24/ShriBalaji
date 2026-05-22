@@ -7,7 +7,7 @@ import { Footer } from "@/components/footer";
 export default function NotFound() {
   return (
     <>
-      <Header />
+    
       <main className="pt-20 min-h-[70vh] flex items-center justify-center">
         <div className="mx-auto max-w-xl px-4 lg:px-8 text-center">
           <div className="font-serif text-8xl md:text-9xl text-muted-foreground/20 mb-4">
@@ -28,7 +28,7 @@ export default function NotFound() {
           </Button>
         </div>
       </main>
-      <Footer />
+    
     </>
   );
 }

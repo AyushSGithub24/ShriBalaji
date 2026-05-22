@@ -1,12 +1,20 @@
-"use client";
+"use client"; // Keep this! We need it for useState and useTheme
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Search, Menu, X, User, Moon, Sun } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Search, Menu, X, User, Moon, Sun, LogOut } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+
+// 1. Define the props to accept the user from the layout
+interface HeaderProps {
+  user: { userId: string; userName: string } | null;
+}
+
+
 
 const navigation = [
   { name: "Signage", href: "/category/outdoor-signage" },
@@ -16,11 +24,13 @@ const navigation = [
   { name: "Awards", href: "/category/recognition-events" },
 ];
 
-export function Header() {
+// 2. Accept the user prop here! DO NOT call getUserSession() inside this file.
+export function Header({ user }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const { theme, setTheme } = useTheme();
+  const router = useRouter(); 
 
   useEffect(() => {
     setMounted(true);
@@ -29,14 +39,33 @@ export function Header() {
   const effectiveTheme = mounted && theme !== "system" ? theme : "light";
   const isDark = effectiveTheme === "dark";
 
+  // 3. Create the logout function
+  const handleLogout = async () => {
+    try {
+      const response = await fetch('/api/auth/logout', {
+        method: 'POST',
+      });
+
+      if (response.ok) {
+        // Send them to the login page (or home page)
+        router.push('/login'); 
+        // Force the server to re-render the layout and hide the user's name
+        router.refresh(); 
+      }
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 lg:px-8">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
-         
-          <span className="font-serif text-4xl font-normal tracking-tight bg-[#faf8f5] rounded">
-            <span className="text-[#362F8F]">S</span><span className="text-red-500">B</span><span className="text-[#362F8F]">A</span>
+          <span className="font-serif text-4xl font-normal tracking-tight bg-transparent  rounded ">
+            <span className="text-[#362F8F] dark:text-blue-400">S</span>
+            <span className="text-red-500">B</span>
+            <span className="text-[#362F8F] dark:text-blue-400">A</span>
           </span>
         </Link>
 
@@ -58,12 +87,7 @@ export function Header() {
         <div className="flex items-center gap-3">
           {/* Search */}
           <div className="relative hidden sm:block">
-            <div
-              className={cn(
-                "flex items-center transition-all duration-300",
-                searchOpen ? "w-64" : "w-10"
-              )}
-            >
+            <div className={cn("flex items-center transition-all duration-300", searchOpen ? "w-64" : "w-10")}>
               {searchOpen && (
                 <Input
                   type="text"
@@ -75,10 +99,7 @@ export function Header() {
               )}
               <button
                 onClick={() => setSearchOpen(!searchOpen)}
-                className={cn(
-                  "p-2 rounded-full hover:bg-secondary transition-colors",
-                  searchOpen && "absolute right-0"
-                )}
+                className={cn("p-2 rounded-full hover:bg-secondary transition-colors", searchOpen && "absolute right-0")}
               >
                 <Search className="h-5 w-5 text-muted-foreground" />
               </button>
@@ -91,53 +112,46 @@ export function Header() {
             size="sm"
             className="hidden sm:inline-flex p-2 rounded-full hover:bg-secondary transition-colors"
             onClick={() => setTheme(isDark ? "light" : "dark")}
-            aria-label="Toggle color mode"
           >
-            {isDark ? (
-              <Sun className="h-4 w-4" />
-            ) : (
-              <Moon className="h-4 w-4" />
-            )}
+            {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </Button>
 
-          {/* Login */}
-          <Button asChild variant="ghost" size="sm" className="hidden sm:flex gap-2">
-            <Link href="/login" className="inline-flex items-center gap-2">
-              <User className="h-4 w-4" />
-              <span>Login</span>
-            </Link>
-          </Button>
+          {/* DESKTOP LOGIN/USER STATE */}
+          <div className="hidden sm:flex">
+            {user ? (
+              <div className="flex items-center gap-3">
+                <span className="text-sm font-medium">{user.userName}</span>
+                <Button variant="outline" size="sm" className="gap-2" onClick={handleLogout}>
+                  <LogOut className="h-4 w-4" />
+                </Button>
+              </div>
+            ) : (
+              <Button asChild variant="ghost" size="sm" className="gap-2">
+                <Link href="/login" className="inline-flex items-center gap-2">
+                  <User className="h-4 w-4" />
+                  <span>Login</span>
+                </Link>
+              </Button>
+            )}
+          </div>
 
           {/* Mobile menu button */}
           <button
             className="lg:hidden p-2 rounded-full hover:bg-secondary transition-colors"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
-            {mobileMenuOpen ? (
-              <X className="h-6 w-6" />
-            ) : (
-              <Menu className="h-6 w-6" />
-            )}
+            {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
         </div>
       </nav>
 
       {/* Mobile menu */}
-      <div
-        className={cn(
-          "lg:hidden overflow-hidden transition-all duration-300",
-          mobileMenuOpen ? "max-h-96" : "max-h-0"
-        )}
-      >
+      <div className={cn("lg:hidden overflow-hidden transition-all duration-300", mobileMenuOpen ? "max-h-96" : "max-h-0")}>
         <div className="px-4 py-4 space-y-2 bg-background border-t border-border">
           {/* Mobile search */}
           <div className="relative mb-4">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="text"
-              placeholder="Search signage, vinyl..."
-              className="pl-10 bg-secondary border-0"
-            />
+            <Input type="text" placeholder="Search signage, vinyl..." className="pl-10 bg-secondary border-0" />
           </div>
 
           {navigation.map((item) => (
@@ -151,13 +165,27 @@ export function Header() {
             </Link>
           ))}
 
-          <div className="pt-4 border-t border-border">
-            <Button asChild variant="outline" className="w-full justify-center gap-2">
-              <Link href="/login" className="inline-flex items-center justify-center gap-2 w-full">
-                <User className="h-4 w-4" />
-                <span>Login / Sign up</span>
-              </Link>
-            </Button>
+          {/* MOBILE LOGIN/USER STATE */}
+          <div className="pt-4 border-t border-border w-full">
+            {user ? (
+              <div className="flex items-center justify-between gap-4 w-full px-2">
+                <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+                  <User className="h-4 w-4 text-muted-foreground" />
+                  <span className="truncate">Welcome, {user.userName}</span>
+                </div>
+                <Button variant="outline" size="sm" className="gap-2" onClick={handleLogout}>
+                  <LogOut className="h-4 w-4" />
+                  <span>Logout</span>
+                </Button>
+              </div>
+            ) : (
+              <Button asChild variant="outline" className="w-full justify-center gap-2">
+                <Link href="/login" className="inline-flex items-center justify-center gap-2 w-full">
+                  <User className="h-4 w-4" />
+                  <span>Login / Sign up</span>
+                </Link>
+              </Button>
+            )}
           </div>
         </div>
       </div>

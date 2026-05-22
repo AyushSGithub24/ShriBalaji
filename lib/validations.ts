@@ -15,6 +15,7 @@ export const passwordSchema = z
 export const signupSchema = z.object({
   email: z.string().min(3).max(50).email("Invalid email format"),
   name: z.string().min(2).max(20, "Name must be between 2 and 20 characters"),
+  number: z.string().min(10).max(10, "Phone number must be 10 digits"),
   password: passwordSchema,
 });
 

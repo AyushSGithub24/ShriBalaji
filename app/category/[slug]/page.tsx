@@ -82,7 +82,7 @@ export default async function CategoryPage({ params }: PageProps) {
 
   return (
     <>
-      <Header />
+    
       <main className="pt-20">
         {/* Hero section */}
         <section className="relative h-[40vh] min-h-[300px] flex items-end">
@@ -209,7 +209,7 @@ export default async function CategoryPage({ params }: PageProps) {
           </div>
         </section>
       </main>
-      <Footer />
+   
     </>
   );
 }

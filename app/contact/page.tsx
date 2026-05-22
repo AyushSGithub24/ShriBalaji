@@ -43,7 +43,7 @@ const contactInfo = [
 export default function ContactPage() {
   return (
     <>
-      <Header />
+      
       <main className="pt-20">
         {/* Hero section */}
         <section className="py-16 lg:py-24 bg-secondary/30">
@@ -110,7 +110,7 @@ export default function ContactPage() {
           </div>
         </section>
       </main>
-      <Footer />
+   
     </>
   );
 }

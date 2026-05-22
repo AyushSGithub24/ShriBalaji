@@ -1,3 +1,4 @@
+"use client";
 import Link from 'next/link';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
@@ -5,10 +6,58 @@ import { Button } from '@/components/ui/button';
 import { Card, CardTitle, CardDescription } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 
+import {loginSchema,LoginInput} from '@/lib/validations';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+
 export default function LoginPage() {
+  const router = useRouter();
+  const [serverError, setServerError] = useState<string | null>(null);
+
+  // Initialize the form with Zod
+    const {
+      register,
+      handleSubmit,
+      formState: { errors, isSubmitting },
+    } = useForm<LoginInput>({
+      resolver: zodResolver(loginSchema),
+      mode: 'onChange'
+    });
+
+     // The function that runs when the form is valid and submitted
+      const onSubmit = async (data: LoginInput) => {
+        setServerError(null); // Clear previous errors
+    
+        try {
+          const response = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+          });
+    
+          const result = await response.json();
+    
+          if (!response.ok) {
+            setServerError(result.message || 'Something went wrong');
+            return;
+          }
+
+          
+    
+          
+          router.push('/');
+          router.refresh(); 
+          
+        } catch (error) {
+          setServerError('Failed to connect to the server. Please try again.');
+        }
+      };
+
   return (
     <>
-      <Header />
+     
       <main
         className="min-h-[calc(100vh-80px)] py-24"
         style={{
@@ -49,15 +98,24 @@ export default function LoginPage() {
                   <CardDescription>Enter your credentials to continue to your dashboard and order history.</CardDescription>
                 </div>
 
-                <form className="space-y-5">
+                {/* Display Server Errors (e.g., Invalid credentials) */}
+                {serverError && (
+                  <div className="p-3 text-sm font-medium text-destructive bg-destructive/10 rounded-md">
+                    {serverError}
+                  </div>
+                )}
+
+                <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
                   <div className="space-y-4">
                     <label className="block text-sm font-medium text-foreground">Email address</label>
                     <Input
                       type="email"
                       placeholder="name@example.com"
-                      required
-                      className="bg-secondary/70 border-border"
-                    />
+                      {...register('email')} // Connect Zod to this input
+                       className={`bg-secondary/70 border-border ${errors.email ? 'border-destructive' : ''}`}
+                      />
+                      {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
+                   
                   </div>
 
                   <div className="space-y-4">
@@ -65,13 +123,16 @@ export default function LoginPage() {
                     <Input
                       type="password"
                       placeholder="••••••••"
-                      required
-                      className="bg-secondary/70 border-border"
-                    />
+                     {...register('password')}
+                        className={`bg-secondary/70 border-border ${errors.password ? 'border-destructive' : ''}`}
+                      />
+                      {errors.password && <p className="text-sm text-destructive">{errors.password.message}</p>}  
+                
                   </div>
 
-                  <Button type="submit" className="w-full">
-                    Sign in
+                   {/* Disable button while submitting so they don't click it twice */}
+                  <Button type="submit" className="w-full" disabled={isSubmitting}>
+                    {isSubmitting ? 'Logging in...' : 'login'}
                   </Button>
                 </form>
 
@@ -91,7 +152,7 @@ export default function LoginPage() {
           </div>
         </div>
       </main>
-      <Footer />
+    
     </>
   );
 }

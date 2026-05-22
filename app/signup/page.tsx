@@ -1,14 +1,61 @@
+'use client';
 import Link from 'next/link';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { Button } from '@/components/ui/button';
 import { Card, CardTitle, CardDescription } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { signupSchema, SignupInput } from '@/lib/validations';
 
 export default function SignupPage() {
+  const router = useRouter();
+  const [serverError, setServerError] = useState<string | null>(null);
+
+  // Initialize the form with Zod
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<SignupInput>({
+    resolver: zodResolver(signupSchema),
+    mode: 'onChange'
+  });
+
+  // The function that runs when the form is valid and submitted
+  const onSubmit = async (data: SignupInput) => {
+    setServerError(null); // Clear previous errors
+
+    try {
+      const response = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        // If the backend returns an error (like "Email already exists")
+        setServerError(result.message || 'Something went wrong');
+        return;
+      }
+
+      // Success! Redirect the user to the login page
+      router.push('/login');
+      
+    } catch (error) {
+      setServerError('Failed to connect to the server. Please try again.');
+    }
+  };
+
+
   return (
     <>
-      <Header />
+  
       <main
         className="min-h-[calc(100vh-80px)] py-24"
         style={{
@@ -49,16 +96,25 @@ export default function SignupPage() {
                   <CardDescription>Complete the form below to join the SBA customer portal.</CardDescription>
                 </div>
 
-                <form className="space-y-5">
+                {/* Display Server Errors (e.g., Email already in use) */}
+                {serverError && (
+                  <div className="p-3 text-sm font-medium text-destructive bg-destructive/10 rounded-md">
+                    {serverError}
+                  </div>
+                )}
+
+                <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
                   <div className="grid gap-4">
                     <div className="space-y-4">
                       <label className="block text-sm font-medium text-foreground">Full name</label>
                       <Input
                         type="text"
                         placeholder="John Doe"
+                        {...register('name')} // Connect Zod to this input
                         required
-                        className="bg-secondary/70 border-border"
+                        className={`bg-secondary/70 border-border ${errors.name ? 'border-destructive' : ''}`}
                       />
+                      {errors.name && <p className="text-sm text-destructive">{errors.name.message}</p>}
                     </div>
 
                     <div className="space-y-4">
@@ -66,19 +122,22 @@ export default function SignupPage() {
                       <Input
                         type="email"
                         placeholder="name@example.com"
+                        {...register('email')} // Connect Zod to this input
                         required
-                        className="bg-secondary/70 border-border"
+                        className={`bg-secondary/70 border-border ${errors.email ? 'border-destructive' : ''}`}
                       />
+                      {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
                     </div>
 
                     <div className="space-y-4">
                       <label className="block text-sm font-medium text-foreground">Phone number</label>
                       <Input
                         type="tel"
-                        placeholder="+91 9999999999"
+                        placeholder="+91 99999xx999"
                         required
-                        className="bg-secondary/70 border-border"
-                      />
+                        {...register('number')}
+                        className={`bg-secondary/70 border-border ${errors.number ? 'border-destructive' : ''}`}   />
+                      {errors.number && <p className="text-sm text-destructive">{errors.number.message}</p>}
                     </div>
 
                     <div className="space-y-4">
@@ -87,13 +146,15 @@ export default function SignupPage() {
                         type="password"
                         placeholder="••••••••"
                         required
-                        className="bg-secondary/70 border-border"
+                        {...register('password')}
+                        className={`bg-secondary/70 border-border ${errors.password ? 'border-destructive' : ''}`}
                       />
-                    </div>
+                      {errors.password && <p className="text-sm text-destructive">{errors.password.message}</p>} </div>
                   </div>
 
-                  <Button type="submit" className="w-full">
-                    Create account
+                  {/* Disable button while submitting so they don't click it twice */}
+                  <Button type="submit" className="w-full" disabled={isSubmitting}>
+                    {isSubmitting ? 'Creating account...' : 'Create account'}
                   </Button>
                 </form>
 
@@ -113,7 +174,7 @@ export default function SignupPage() {
           </div>
         </div>
       </main>
-      <Footer />
+      
     </>
   );
 }

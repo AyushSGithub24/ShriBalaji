@@ -71,8 +71,7 @@ export default async function ProductPage({ params }: PageProps) {
   ];
 
   return (
-    <>
-      <Header />
+    <> 
       <main className="pt-20">
         {/* Breadcrumb */}
         <div className="border-b border-border">
@@ -111,8 +110,7 @@ export default async function ProductPage({ params }: PageProps) {
             <ProductConfigurator product={product} images={images} />
           </div>
         </section>
-      </main>
-      <Footer />
+      </main> 
     </>
   );
 }

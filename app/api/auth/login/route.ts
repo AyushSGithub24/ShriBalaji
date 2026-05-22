@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db"; 
 import { users } from "@/lib/schema";
 import { eq } from "drizzle-orm";
-import bcrypt from "bcryptjs";
+import bcrypt from "bcrypt";
 
 import { loginSchema } from "@/lib/validations"; 
 import { generateAccessToken } from "@/lib/token";
@@ -45,7 +45,7 @@ export async function POST(req:Request){
 
         // 2. Prepare the response
         const response = NextResponse.json(
-            { message: "Login successful" },
+            { message: "Login successful" , name: user[0].name, email: user[0].email},
             { status: 200 }
         );
 

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db"; 
 import { users } from "@/lib/schema";
 import { eq } from "drizzle-orm";
-import bcrypt from "bcryptjs";
+import bcrypt from "bcrypt";
 import { signupSchema } from "@/lib/validations";  
 
 export async function POST(req: Request) {
@@ -45,6 +45,7 @@ export async function POST(req: Request) {
     await db.insert(users).values({
       name,
       email,
+      number:result.data.number,
       passwordHash: hashedPassword,
       role: 'CUSTOMER', // Defaulting to CUSTOMER from your schema
     });

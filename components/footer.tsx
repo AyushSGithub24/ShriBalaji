@@ -36,11 +36,11 @@ export function Footer() {
           {/* Brand column */}
           <div className="col-span-2 md:col-span-3 lg:col-span-2">
             <Link href="/" className="flex items-center gap-2 mb-4">
-              <span className="font-serif text-4xl font-normal tracking-tight">
-                <span className="text-[#362F8F]">S</span>
-                <span className="text-red-500">B</span>
-                <span className="text-[#362F8F]">A</span>
-              </span>
+              <span className="font-serif text-4xl font-normal tracking-tight bg-transparent  rounded dark:bg-transparent">
+            <span className="text-[#362F8F] dark:text-blue-400">S</span>
+            <span className="text-red-500">B</span>
+            <span className="text-[#362F8F] dark:text-blue-400">A</span>
+          </span>
             </Link>
             <p className="text-sm text-muted-foreground mb-5 max-w-xs">
               Shri Balaji Advertising & Marketing - Your trusted partner for

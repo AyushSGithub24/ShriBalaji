@@ -9,14 +9,14 @@ import { ProcessTracker } from "@/components/ui/process-tracker";
 export default function HomePage() {
   return (
     <>
-      <Header />
+      
       <main>
         <Hero />
         <CategoryGrid />
         <ProcessTracker/>
         <CTASection />
       </main>
-      <Footer />
+      
     </>
   );
 }
