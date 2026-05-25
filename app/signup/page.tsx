@@ -135,9 +135,9 @@ export default function SignupPage() {
                         type="tel"
                         placeholder="+91 99999xx999"
                         required
-                        {...register('number')}
-                        className={`bg-secondary/70 border-border ${errors.number ? 'border-destructive' : ''}`}   />
-                      {errors.number && <p className="text-sm text-destructive">{errors.number.message}</p>}
+                        {...register('phoneNumber')}
+                        className={`bg-secondary/70 border-border ${errors.phoneNumber ? 'border-destructive' : ''}`}   />
+                      {errors.phoneNumber && <p className="text-sm text-destructive">{errors.phoneNumber.message}</p>}
                     </div>
 
                     <div className="space-y-4">

@@ -21,7 +21,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const { email, name, password } = result.data;
+    const { email, name, password,phoneNumber } = result.data;
 
     // 3. Check if a user with this email already exists
     const existingUser = await db
@@ -45,7 +45,7 @@ export async function POST(req: Request) {
     await db.insert(users).values({
       name,
       email,
-      number:result.data.number,
+      phoneNumber,
       passwordHash: hashedPassword,
       role: 'CUSTOMER', // Defaulting to CUSTOMER from your schema
     });
